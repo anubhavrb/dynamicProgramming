@@ -2,8 +2,8 @@
 //  main.cpp
 //  p3
 //
-//  Created by Chen, Arthur on 10/22/17.
-//  Copyright © 2017 Chen, Arthur. All rights reserved.
+//  P3 part A. Optimal matrix multiplication
+//  Arthur Chen and Anubhav Roy Bhattacharya
 //
 
 #include <iostream>
@@ -71,6 +71,7 @@ int main(int argc, const char * argv[]) {
         cout << endl;
     }
 
+    cout << endl;
     cout << "Table s[i, j]:" << endl;
     for (int i=1; i < n+1; i++){
         for (int j=1; j < n+1; j++){

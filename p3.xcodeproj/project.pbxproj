@@ -248,6 +248,7 @@
 				F35BD60A1F9D2126003F7C1A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

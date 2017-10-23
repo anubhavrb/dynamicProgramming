@@ -11,6 +11,7 @@
 using namespace std;
 
 void getInput(int*, int);
+void greedyChange(int*, int, int);
 
 int main(int argc, const char* argv[]) {
     
@@ -21,11 +22,27 @@ int main(int argc, const char* argv[]) {
     int* coins = new int[n+1];
     getInput(coins, n);
     
-    for (int i = 0; i < n+1; i++) {
-        cout << coins[i] << " ";
+    int amt;
+    cout << "Enter amount to test, or enter -1 to exit: ";
+    cin >> amt;
+    while (amt != -1) {
+        if (amt == 0) {
+            cout << "  Greedy: 0\n    Number of coins: 0" << endl;
+            cout << "  Optimal: 0\n    Number of coins: 0" << endl;
+            cout << "  Greed is optimal!" << endl;
+        }
+        else if (amt < -1) {
+            cout << "Invalid amount!" << endl;
+            
+        }
+        else {
+            greedyChange(coins, n+1, amt);
+            
+        }
+        cout << "Enter amount to test, or enter -1 to exit: ";
+        cin >> amt;
     }
-    cout << endl;
-    
+    cout << "Thank you for playing!" << endl;
     return 0;
 }
 
@@ -38,4 +55,9 @@ void getInput(int* coins, int n) {
         cout << "Coin value " << (i+1) << ": ";
         cin >> coins[i];
     }
+}
+
+// Function to make change using the greedy approach.
+void greedyChange(int* coins, int n, int amt) {
+    
 }

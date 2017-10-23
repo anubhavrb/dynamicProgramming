@@ -27,8 +27,8 @@ int main(int argc, const char* argv[]) {
     cin >> amt;
     while (amt != -1) {
         if (amt == 0) {
-            cout << "  Greedy: 0\n    Number of coins: 0" << endl;
-            cout << "  Optimal: 0\n    Number of coins: 0" << endl;
+            cout << "  Greedy:\n    Number of coins: 0" << endl;
+            cout << "  Optimal:\n    Number of coins: 0" << endl;
             cout << "  Greed is optimal!" << endl;
         }
         else if (amt < -1) {
@@ -60,4 +60,20 @@ void getInput(int* coins, int n) {
 // Function to make change using the greedy approach.
 void greedyChange(int* coins, int n, int amt) {
     
+    int sum = 0;
+    int numCoins = 0;
+    cout << "  Greedy: ";
+    int i;
+    while (sum != amt) {
+        for (i = n-1; i >= 0; i--) {
+            if (sum + coins[i] <= amt) {
+                sum = sum + coins[i];
+                cout << coins[i] << " ";
+                numCoins++;
+                break;
+            }
+        }
+    }
+    cout << endl;
+    cout << "    Number of coins: " << numCoins << endl;
 }

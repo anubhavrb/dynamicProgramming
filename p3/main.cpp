@@ -64,6 +64,7 @@ int main(int argc, const char * argv[]) {
     addParent(f, b, 1, n, s);
     f[1]--;
     b[n]--;
+    
     string str;
 
     for (int i=1; i<=n;i++){
@@ -112,7 +113,6 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
-// Function to increment positions where there should be parentheses.
 void addParent(int *f, int *b, int i, int j, int **s){
     if ((j - i) < 1) return;
 

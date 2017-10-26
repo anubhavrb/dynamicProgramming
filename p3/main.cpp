@@ -1,19 +1,27 @@
 //
-//  main.cpp
-//  p3
+//  P3 part A. Optimal matrix multiplication
+//  Arthur Chen and Anubhav Roy Bhattacharya
 //
-//  Created by Chen, Arthur on 10/22/17.
-//  Copyright © 2017 Chen, Arthur. All rights reserved.
+//  Exact number of times the inner loop is excuted,
+//  as a function of the number of matrices n
+//
+//  Sum[Sum[Sum[1, {k, i, i + l - 1}], {i, 1, n - l}], {l, 1, n - 1}]
+//  1/6 (-1 + n) n (1 + n)
+//
+//  f(n)= -(n/6) + n^3/6
 //
 
 #include <iostream>
+#include <string>
+
+using namespace std;
+
+void addParent(int*, int*, int, int, int **);
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
-    using namespace std;
     int n;
     
-    cout << "number of matrices? ";
+    cout << "Number of matrices? ";
     cin >> n;
     int p[n+1];
     if (n < 1){
@@ -29,8 +37,13 @@ int main(int argc, const char * argv[]) {
     }
     cout << endl;
     
-    int m[n+1][n+1];
-    int s[n+1][n+1];
+    int **m = new int *[n+1];
+    int **s = new int *[n+1];
+
+    for (int i=0; i<n+1; i++){
+        m[i] = new int[n+1];
+        s[i] = new int[n+1];
+    }
     
     for (int i=0; i < n+1; i++){
         for (int j=0; j < n+1; j++){
@@ -39,14 +52,16 @@ int main(int argc, const char * argv[]) {
         }
      }
     
+    int innerCount = 0;
+    //dynamic programming part
     int j, q;
     for (int l=1; l <= n-1; l++){
         for (int i=1; i <= n-l; i++){
             j = i+l;
             m[i][j] = numeric_limits<int>::max();
             for (int k = i; k <= j - 1; k++){
+                innerCount++;
                 q = m[i][k] + m[k+1][j] + p[i-1] * p[k] * p[j];
-                //cout << "At index i, j = " << i << " " << j << ", q = " << q << endl;
                 if (q < m[i][j]){
                     m[i][j] = q;
                     s[i][j] = k;
@@ -54,15 +69,30 @@ int main(int argc, const char * argv[]) {
             }
         }
     }
-    /*int front[2], back[2];
-    for (int i = n; i > 0; i--){
-        front[0] = 1;
-        front[1] = m[1][i];
-        back[0] = m[1][i] + 1;
-        back[1] = ;
-        
-    }*/
+
+    int *f = new int[n+1];
+    int *b = new int[n+1];
+    memset(f, 0, sizeof(int) * (n+1));
+    memset(b, 0, sizeof(int) * (n+1));
+
+    cout << endl;
+
+    addParent(f, b, 1, n, s);
+    f[1]--;
+    b[n]--;
     
+    string str;
+
+    for (int i=1; i<=n;i++){
+        for (int j=0; j<f[i]; j++){
+            str.append("(");
+        }
+        str.append("A"+to_string(i));
+        for (int k=0; k<b[i]; k++){
+            str.append(")");
+        }
+    }
+
     cout << "Table m[i, j]:" << endl;
     for (int i=1; i < n+1; i++){
         for (int j=1; j < n+1; j++){
@@ -71,6 +101,7 @@ int main(int argc, const char * argv[]) {
         cout << endl;
     }
 
+    cout << endl;
     cout << "Table s[i, j]:" << endl;
     for (int i=1; i < n+1; i++){
         for (int j=1; j < n+1; j++){
@@ -79,9 +110,34 @@ int main(int argc, const char * argv[]) {
         cout << endl;
     }
     
+    cout << endl;
+    cout << "Optimal grouping:" << endl;
+    cout << str << endl;
+    cout << endl;
+    cout << "Total cost: " << m[1][n] << " multiplications." << endl;
+    
+    delete[] f;
+    delete[] b;
+
+    for (int i=0; i<n+1; i++){
+        delete[] m[i];
+        delete[] s[i];
+    }
+    delete[] m;
+    delete[] s;
     
     return 0;
 }
 
+void addParent(int *f, int *b, int i, int j, int **s){
+    if ((j - i) < 1) return;
+
+    int parent_pos = s[i][j];
+    f[i]++;
+    b[j]++;
+    if (parent_pos == j)  return;
+    addParent(f, b, i, parent_pos, s);
+    addParent(f, b, parent_pos+1, j, s);
+}
 
 

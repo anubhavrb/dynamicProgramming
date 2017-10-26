@@ -12,8 +12,8 @@
 using namespace std;
 
 void getInput(int*, int);
-void greedyChange(const int*, const int, const int);
-void optimalChange(const int*, const int, const int, vector<vector<int> >&);
+int greedyChange(const int*, const int, const int);
+int optimalChange(const int*, const int, const int, vector<vector<int> >&);
 
 
 int main(int argc, const char* argv[]) {
@@ -30,6 +30,7 @@ int main(int argc, const char* argv[]) {
     int amt;
     cout << "Enter amount to test, or enter -1 to exit: ";
     cin >> amt;
+    int num1, num2;
     while (amt >= 0) {
         if (amt == 0) {
             cout << "  Greedy:\n    Number of coins: 0" << endl;
@@ -37,8 +38,17 @@ int main(int argc, const char* argv[]) {
             cout << "  Greed is optimal!" << endl;
         }
         else {
-            greedyChange(coins, n+1, amt);
-            optimalChange(coins, n+2, amt, v);
+            num1 = greedyChange(coins, n+1, amt);
+            cout << "    Number of coins: " << num1 << endl;
+            num2 = optimalChange(coins, n+2, amt, v);
+            cout << "    Number of coins: " << num2 << endl;
+            
+            if (num1 <= num2) {
+                cout << "  Greed is optimal!" << endl;
+            }
+            else {
+                cout << "  Greed is not optimal!" << endl;
+            }
         }
         cout << "Enter amount to test, or enter -1 to exit: ";
         cin >> amt;
@@ -61,7 +71,7 @@ void getInput(int* coins, int n) {
 }
 
 // Function to make change using the greedy approach.
-void greedyChange(const int* coins, const int n, const int amt) {
+int greedyChange(const int* coins, const int n, const int amt) {
     
     int sum = 0;
     int numCoins = 0;
@@ -78,10 +88,10 @@ void greedyChange(const int* coins, const int n, const int amt) {
         }
     }
     cout << endl;
-    cout << "    Number of coins: " << numCoins << endl;
+    return numCoins;
 }
 
-void optimalChange(const int* coins, const int n, const int amt, vector< vector<int> >& v){
+int optimalChange(const int* coins, const int n, const int amt, vector< vector<int> >& v){
     for (int i=0; i<n; i++){
         if (amt > v[i].size())	v[i].resize(amt+1);
     }
@@ -135,7 +145,5 @@ void optimalChange(const int* coins, const int n, const int amt, vector< vector<
         }
     }
     cout << endl;
-
-    cout << "Number of coins: " << v[n-1][amt] << endl;
-
+    return v[n-1][amt];
 }

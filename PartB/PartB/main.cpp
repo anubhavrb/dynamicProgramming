@@ -11,7 +11,9 @@
 using namespace std;
 
 void getInput(int*, int);
-void greedyChange(int*, int, int);
+void greedyChange(const int*, const int, const int);
+void optimalChange(const int*, const int, const int, vector<vector<int>&);
+
 
 int main(int argc, const char* argv[]) {
     
@@ -22,22 +24,23 @@ int main(int argc, const char* argv[]) {
     int* coins = new int[n+1];
     getInput(coins, n);
     
+    vector<vector<int>> v;
+    for (int i=0; i<n; i++){
+
+    }
+
     int amt;
     cout << "Enter amount to test, or enter -1 to exit: ";
     cin >> amt;
-    while (amt != -1) {
+    while (amt >= 0) {
         if (amt == 0) {
             cout << "  Greedy:\n    Number of coins: 0" << endl;
             cout << "  Optimal:\n    Number of coins: 0" << endl;
             cout << "  Greed is optimal!" << endl;
         }
-        else if (amt < -1) {
-            cout << "Invalid amount!" << endl;
-            
-        }
         else {
             greedyChange(coins, n+1, amt);
-            
+            optimalChange(coins, n+1, amt, v);
         }
         cout << "Enter amount to test, or enter -1 to exit: ";
         cin >> amt;
@@ -58,7 +61,7 @@ void getInput(int* coins, int n) {
 }
 
 // Function to make change using the greedy approach.
-void greedyChange(int* coins, int n, int amt) {
+void greedyChange(const int* coins, const int n, const int amt) {
     
     int sum = 0;
     int numCoins = 0;
@@ -76,4 +79,32 @@ void greedyChange(int* coins, int n, int amt) {
     }
     cout << endl;
     cout << "    Number of coins: " << numCoins << endl;
+}
+
+void optimalChange(const int* coins, const int n, const int amt, vector<vector<int>> v){
+	if (amt > v.size())	v.resize(amt);
+	/*
+		1	2	3	4	5	6	7	8	m ..... amt
+	1	1	2	3	0	1	0	1	
+	2	0	0	0	1	1	0	0
+	3	0	0	0	0	0	1	1	
+	4	
+	5	
+	
+	*/
+	for (int m=1; m<amt; m++){
+		int min = 10000;
+		int index = n-1;
+		//loop through m-c and calculate v[m-c][5] + 1, find the min
+		for (int i=n-1; i>0; i--){
+			if (coins[i] > m)	break;
+			int rec = v[i][m-coins[i]] + 1;
+			if (rec < min){
+				min = rec;
+				index = i;
+			}
+		}
+		v[index][m] = rec;
+	}
+
 }

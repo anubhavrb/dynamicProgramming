@@ -2,6 +2,14 @@
 //  P3 part A. Optimal matrix multiplication
 //  Arthur Chen and Anubhav Roy Bhattacharya
 //
+//  Exact number of times the inner loop is excuted,
+//  as a function of the number of matrices n
+//
+//  Sum[Sum[Sum[1, {k, i, i + l - 1}], {i, 1, n - l}], {l, 1, n - 1}]
+//  1/6 (-1 + n) n (1 + n)
+//
+//  f(n)= -(n/6) + n^3/6
+//
 
 #include <iostream>
 #include <string>
@@ -64,6 +72,11 @@ int main(int argc, const char * argv[]) {
 
     int *f = new int[n+1];
     int *b = new int[n+1];
+    memset(f, 0, sizeof(int) * (n+1));
+    memset(b, 0, sizeof(int) * (n+1));
+
+    cout << endl;
+
     addParent(f, b, 1, n, s);
     f[1]--;
     b[n]--;

@@ -44,12 +44,15 @@ int main(int argc, const char * argv[]) {
         }
      }
     
+    int innerCount = 0;
+    //dynamic programming part
     int j, q;
     for (int l=1; l <= n-1; l++){
         for (int i=1; i <= n-l; i++){
             j = i+l;
             m[i][j] = numeric_limits<int>::max();
             for (int k = i; k <= j - 1; k++){
+                innerCount++;
                 q = m[i][k] + m[k+1][j] + p[i-1] * p[k] * p[j];
                 if (q < m[i][j]){
                     m[i][j] = q;

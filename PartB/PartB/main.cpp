@@ -8,11 +8,12 @@
 
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
 void getInput(int*, int);
 void greedyChange(const int*, const int, const int);
-void optimalChange(const int*, const int, const int, vector<vector<int>&);
+void optimalChange(const int*, const int, const int, vector<vector<int> >&);
 
 
 int main(int argc, const char* argv[]) {
@@ -24,10 +25,7 @@ int main(int argc, const char* argv[]) {
     int* coins = new int[n+1];
     getInput(coins, n);
     
-    vector<vector<int>> v;
-    for (int i=0; i<n; i++){
-
-    }
+    vector<vector<int> > v (n+2);
 
     int amt;
     cout << "Enter amount to test, or enter -1 to exit: ";
@@ -40,11 +38,13 @@ int main(int argc, const char* argv[]) {
         }
         else {
             greedyChange(coins, n+1, amt);
-            optimalChange(coins, n+1, amt, v);
+            optimalChange(coins, n+2, amt, v);
         }
         cout << "Enter amount to test, or enter -1 to exit: ";
         cin >> amt;
     }
+    
+    delete[] coins;
     cout << "Thank you for playing!" << endl;
     return 0;
 }
@@ -81,30 +81,61 @@ void greedyChange(const int* coins, const int n, const int amt) {
     cout << "    Number of coins: " << numCoins << endl;
 }
 
-void optimalChange(const int* coins, const int n, const int amt, vector<vector<int>> v){
-	if (amt > v.size())	v.resize(amt);
-	/*
-		1	2	3	4	5	6	7	8	m ..... amt
-	1	1	2	3	0	1	0	1	
-	2	0	0	0	1	1	0	0
-	3	0	0	0	0	0	1	1	
-	4	
-	5	
-	
-	*/
-	for (int m=1; m<amt; m++){
-		int min = 10000;
-		int index = n-1;
-		//loop through m-c and calculate v[m-c][5] + 1, find the min
-		for (int i=n-1; i>0; i--){
-			if (coins[i] > m)	break;
-			int rec = v[i][m-coins[i]] + 1;
-			if (rec < min){
-				min = rec;
-				index = i;
-			}
-		}
-		v[index][m] = rec;
-	}
+void optimalChange(const int* coins, const int n, const int amt, vector< vector<int> >& v){
+    for (int i=0; i<n; i++){
+        if (amt > v[i].size())	v[i].resize(amt+1);
+    }
+
+    int rec[n][amt+1];  //2D-array for printing solution
+    for (int i=0; i<n; i++){
+        for (int j=0; j<amt+1; j++){
+            rec[i][j]=0;
+        }
+    }
+
+    cout << "  Optimal: ";
+    int v1 ,v2;
+    for (int i=1; i<n; i++){
+        for (int m=0; m<=amt; m++){
+            if (i==1)   v[1][m] = m;    //set the first row, base case
+            else
+            {
+                v2 = v[i-1][m]; //number of k-1 coins to solve problem
+                if (coins[i-1] <= m)
+                {
+                    v1 = v[i][m - coins[i-1]] + 1;  //number of k coins to solve problem
+                    if (v1 <= v2)
+                    {
+                        v[i][m] = v1;
+                        rec[i][m] = coins[i-1];    //set rec because an extra coin is being used
+                    } 
+                    else v[i][m] = v2;
+                }
+                else
+                {
+                    v[i][m] = v2;
+                }
+                if (v[i][m] == 1) rec[i][m] = m;   //set rec because only one coin is being used
+            }
+        }
+    }
+
+
+    int m = amt, index = n-1;
+    for (int i=0; i<v[n-1][amt]; i++){
+        if (rec[index][m] != 0)
+        {
+            cout << rec[index][m] << " ";
+            m-=rec[index][m];
+        }
+        else
+        {
+            i--;
+            index--;
+        }
+    }
+    cout << endl;
+
+    cout << "Number of coins: " << v[n-1][amt] << endl;
 
 }
